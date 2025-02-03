@@ -37,6 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    #own
+    'member',
+
+    #third party
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -121,3 +127,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#Auth - 장고 기본 User사용하는게 아닌 member에서 사용
+AUTH_USER_MODEL= 'member.User'
