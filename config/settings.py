@@ -29,7 +29,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,12 +38,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
 
-    #own
+    # own
     'member',
     'post',
 
-    #third party
+    # third party
     'django_extensions',
 ]
 
@@ -56,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -80,7 +81,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
@@ -90,7 +90,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -110,7 +109,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
@@ -122,18 +120,16 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-#media
+# media
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-
 STATIC_URL = 'static/'
 STATIC_DIR = BASE_DIR / 'static'
-STATICFILES_DIRS = [STATIC_DIR,]
+STATICFILES_DIRS = [STATIC_DIR, ]
 
 STATIC_ROOT = BASE_DIR / '.static_root'
 
@@ -142,10 +138,10 @@ STATIC_ROOT = BASE_DIR / '.static_root'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-#Auth - 장고 기본 User사용하는게 아닌 member에서 사용
-AUTH_USER_MODEL= 'member.User'
+# Auth - 장고 기본 User사용하는게 아닌 member에서 사용
+AUTH_USER_MODEL = 'member.User'
 
-#email
+# email
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.naver.com'
 EMAIL_USE_TLS = True
@@ -153,8 +149,5 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = SECRET['email']['user']
 EMAIL_HOST_PASSWORD = SECRET['email']['password']
 
-LOGIN_URL='/login/'
-LOGOUT_REDIRECT_URL='/'
-
-
-
+LOGIN_URL = '/login/'
+LOGOUT_REDIRECT_URL = '/'

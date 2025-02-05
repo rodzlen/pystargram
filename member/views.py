@@ -1,12 +1,14 @@
 from django.contrib.auth import get_user_model, login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core import signing
 from django.core.signing import TimestampSigner, SignatureExpired
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import FormView, DetailView
-
+from django.views import View
 from member.forms import SignupForm, LoginForm
+from member.models import UserFollowing
 from util.email import send_email
 
 User = get_user_model()
@@ -76,4 +78,21 @@ class UserProfileView(DetailView):
     template_name = 'profile/detail.html'
     slug_field = 'nickname'
     slug_url_kwarg = 'slug'
-    queryset = User.objects.all().prefetch_related('post_set', 'post_set__images')
+    queryset = User.objects.all().prefetch_related('post_set', 'post_set__images','followers','following')
+
+class UserFollowingView(LoginRequiredMixin, View):
+    def post(self, *args, **kwargs):
+        pk = kwargs.get('pk',0)
+        to_user = get_object_or_404(User, pk-pk)
+
+        following= UserFollowing.objects.filter(
+            to_user= to_user,
+            from_user = self.request.user
+        )
+        if following.exist():
+            following.delete()
+        else:
+            UserFollowing.objects.filter(
+                to_user=to_user,
+                from_user=self.request.user
+            )

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load humanize %}
 {% block style %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
     <style>
@@ -20,9 +21,9 @@
             </div>
             <div class="row mt-2">
 
-                <div class="col-4 text-center">{{ object.post_set.count }} posts</div>
-                <div class="col-4 text-center">0 followers</div>
-                <div class="col-4 text-center">0 following</div>
+                <div class="col-4 text-center">{{ object.post_set.count | intcomma}} posts</div>
+                <div class="col-4 text-center">{{ object.followers.count | intcomma }} followers</div>
+                <div class="col-4 text-center">{{ object.following.count | intcomma }} followings</div>
             </div>
             <div class="row mt2">
                 {% for post in object.post_set.all %}
