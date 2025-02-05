@@ -9,18 +9,20 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import json
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+with open(BASE_DIR / '.config_secret' / 'secret.json') as f:
+    config_secret_str = f.read()
 
-
+SECRET = json.loads(config_secret_str)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-yr1=)czc0st_w&)cv8+#acvee2=1qnpc=t&@d8*fi9!@#to#+r'
+SECRET_KEY = SECRET['DJANGO_SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -40,6 +42,7 @@ INSTALLED_APPS = [
 
     #own
     'member',
+    'post',
 
     #third party
     'django_extensions',
@@ -123,6 +126,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
+#media
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+
 STATIC_URL = 'static/'
 STATIC_DIR = BASE_DIR / 'static'
 STATICFILES_DIRS = [STATIC_DIR,]
@@ -136,5 +144,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #Auth - 장고 기본 User사용하는게 아닌 member에서 사용
 AUTH_USER_MODEL= 'member.User'
+
+#email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.naver.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = SECRET['email']['user']
+EMAIL_HOST_PASSWORD = SECRET['email']['password']
+
+LOGIN_URL='/login/'
+LOGOUT_REDIRECT_URL='/'
+
 
 
