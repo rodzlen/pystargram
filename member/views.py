@@ -1,14 +1,13 @@
-from pyexpat.errors import messages
-
 from django.contrib.auth import get_user_model, login
 from django.core import signing
-from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse_lazy,reverse
-from django.views.generic import FormView
+from django.core.signing import TimestampSigner, SignatureExpired
 from django.http import HttpResponseRedirect
-from django.core.signing import TimestampSigner,SignatureExpired
-from util.email import send_email
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy, reverse
+from django.views.generic import FormView, DetailView
+
 from member.forms import SignupForm, LoginForm
+from util.email import send_email
 
 User = get_user_model()
 class SignupView(FormView):
@@ -71,3 +70,10 @@ class LoginView(FormView):
             return HttpResponseRedirect(next_page)
 
         return HttpResponseRedirect(self.get_success_url())
+
+class UserProfileView(DetailView):
+    model = User
+    template_name = 'profile/detail.html'
+    slug_field = 'nickname'
+    slug_url_kwarg = 'slug'
+    queryset = User.objects.all().prefetch_related('post_set', 'post_set__images')

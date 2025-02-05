@@ -1,6 +1,7 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import inlineformset_factory
 
-from post.models import Post, PostImage
+from post.models import Post, PostImage, Comment
 from util.forms import BootstrapModelForm
 
 
@@ -20,3 +21,8 @@ PostImageFormSet = inlineformset_factory(
 formset = [
     PostImageForm(),PostImageForm(),PostImageForm(),
 ]
+
+class CommentForm( BootstrapModelForm):
+    class Meta:
+        model= Comment
+        fields = ('content',)

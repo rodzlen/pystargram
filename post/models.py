@@ -42,17 +42,22 @@ class Comment(TimestampModel):
     post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
     content = models.CharField('내용', max_length=255)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-
     def __str__(self):
         return f'{self.post} | {self.user}'
+class Like(TimestampModel):
+    post = models.ForeignKey(Post, related_name='likes', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='likes', on_delete=models.CASCADE)
+
+
+    def __str__(self):
+        return f'[like] {self.post} | {self.user}'
 
 @receiver(post_save, sender=Post)
 def post_post_save(sender, instance, created,**kwargs):
     hashtags = re.findall(r'#(\w{1,100})(?=\s|$)', instance.content)
     if hashtags:
         tags = [
-            Tag.objects.get_or_create(tag=hashtag)
-            for hashtag in hashtags
+            Tag.objects.get_or_create(tag=hashtag) for hashtag in hashtags
         ]
         tags = [tag for tag, _ in tags]
         instance.tags.clear()
