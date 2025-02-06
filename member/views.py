@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core import signing
 from django.core.signing import TimestampSigner, SignatureExpired
 from django.http import HttpResponseRedirect
+from django.http.response import Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import FormView, DetailView
@@ -80,19 +81,24 @@ class UserProfileView(DetailView):
     slug_url_kwarg = 'slug'
     queryset = User.objects.all().prefetch_related('post_set', 'post_set__images','followers','following')
 
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            data['is_follow']= UserFollowing.objects.filter(to_user=self.object, from_user=self.request.user)
+        return data
+
 class UserFollowingView(LoginRequiredMixin, View):
     def post(self, *args, **kwargs):
         pk = kwargs.get('pk',0)
-        to_user = get_object_or_404(User, pk-pk)
+        to_user = get_object_or_404(User, pk=pk)
 
-        following= UserFollowing.objects.filter(
+        if to_user == self.request.user:
+            raise Http404
+
+        following, created= UserFollowing.objects.get_or_create(
             to_user= to_user,
             from_user = self.request.user
         )
-        if following.exist():
+        if not created:
             following.delete()
-        else:
-            UserFollowing.objects.filter(
-                to_user=to_user,
-                from_user=self.request.user
-            )
+        return HttpResponseRedirect(reverse('profile:detail', kwargs={'slug':to_user.nickname}))
