@@ -54,7 +54,7 @@ urlpatterns = [
     #include
     path('comment/', include('post.comment_urls')),
     path('profile/', include('member.urls')),
-
+    path('oauth/', include('member.oauth_urls')),
 
 ]
 if settings.DEBUG:
